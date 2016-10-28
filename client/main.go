@@ -14,7 +14,9 @@ import (
 * The second one is the Port.
  */
 func main() {
-	conn := conn_server(os.Args[1], os.Args[2])
+  connIp := os.Args[1]
+  port := os.Args[2]
+	conn := conn_server(connIp, port)
 	commandProcess(conn)
 }
 
@@ -23,15 +25,15 @@ func main() {
 * It tries to connect. If some error occur, returns the error.
 * Otherwise, return the connection.
  */
-func conn_server(host string, port string) {
-	fmt.Print("Trying to connect to " + host + "....")
+func conn_server(host string, port string) net.Conn {
+	fmt.Print("\nTrying to connect to " + host + "....")
 
-	conn, connErr := net.Dial("tcp", host+port)
+	conn, connErr := net.Dial("tcp", host + ":" + port)
 	if connErr != nil {
-		log.Fatal("An error occured: " + connErr)
+		log.Fatal("\nAn error occured: ", connErr)
 	}
 
-	fmt.Println("Done")
+	fmt.Println("\nDone")
 
 	return conn
 }
@@ -40,22 +42,24 @@ func conn_server(host string, port string) {
 * This function read and process the command
 * read from the user.
  */
-func commandProcess(conn Conn) {
+func commandProcess(conn net.Conn) {
 	for {
 		bufferIn := bufio.NewReader(os.Stdin)
-		fmt.Print("AngraDB> ")
+		fmt.Print("\nAngraDB> ")
 
-		messageIn, InErr := bufferIn.ReadString(";\n")
+		messageIn, InErr := bufferIn.ReadString(';')
 		if InErr != nil {
-			log.Fatal("An error occured: " + InErr)
+			log.Fatal("\nAn error occured: ", InErr)
 		}
 		fmt.Fprint(conn, messageIn)
 
 		bufferOut := bufio.NewReader(conn)
-		messageOut, OutErr := bufferOut.ReadString("\n")
+    fmt.Println("Entrando no reader da saida:")
+		_, _,OutErr := bufferOut.ReadLine()
+    fmt.Println("Saindo do reader da saida")
 		if OutErr != nil {
-			log.Fatal("An error occured: " + OutErr)
+			log.Fatal("\nAn error occured: ", OutErr)
 		}
-		fmt.Printfln(messageOut)
+		// fmt.Println(messageOut)
 	}
 }

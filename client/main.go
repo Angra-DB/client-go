@@ -7,6 +7,7 @@ import (
 	"net"
 	"os"
   "encoding/json"
+  "strings"
 )
 
 func isJSONString(s string) bool {
@@ -74,7 +75,28 @@ func commandProcess(conn net.Conn) {
 		if InErr != nil {
 			log.Fatal("\nAn error occured: ", InErr)
 		}
+    messageIn = messageIn[:len(messageIn)-1]
+
 		fmt.Fprint(conn, messageIn)
+
+    var json_buffer string
+    if strings.HasPrefix(messageIn, "save"){
+      json_buffer = messageIn[len("save"):len(messageIn)]
+    } else if strings.HasPrefix(messageIn, "lookup"){
+      json_buffer = messageIn[len("lookup"):len(messageIn)]
+    } else if strings.HasPrefix(messageIn, "delete"){
+      json_buffer = messageIn[len("delete"):len(messageIn)]
+    } else if strings.HasPrefix(messageIn, "update"){
+      json_buffer = messageIn[len("update"):len(messageIn)]
+    }
+    
+    if(isJSON(json_buffer) == true){
+      fmt.Println("É JSON.")
+    } else{
+      fmt.Println("Não é JSON.")
+    }
+
+    fmt.Println(json_buffer)
 
 		bufferOut := bufio.NewReader(conn)
     fmt.Println("Entrando no reader da saida:")

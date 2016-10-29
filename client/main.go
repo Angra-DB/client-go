@@ -6,7 +6,30 @@ import (
 	"log"
 	"net"
 	"os"
+  "encoding/json"
 )
+
+func isJSONString(s string) bool {
+    var js string
+    return json.Unmarshal([]byte(s), &js) == nil
+
+}
+
+func isJSON(s string) bool {
+    var js map[string]interface{}
+    return json.Unmarshal([]byte(s), &js) == nil
+
+}
+//TODO: remove comentary above
+// bufferIn := bufio.NewReader(os.Stdin)
+// messageIn, InErr := bufferIn.ReadString('\n')
+// if InErr != nil {
+//   log.Fatal("\nAn error occured: ", InErr)
+// }
+// fmt.Printf("isJSONString(%s) = %v\n", messageIn, isJSONString(messageIn))
+// fmt.Printf("isJSON(%s) = %v\n\n", messageIn, isJSON(messageIn))
+
+
 
 /**
 * This is the main function. It recieves two arguments,
@@ -24,7 +47,7 @@ func main() {
 * This function connects to the server based, in TCP protocol.
 * It tries to connect. If some error occur, returns the error.
 * Otherwise, return the connection.
- */
+*/
 func conn_server(host string, port string) net.Conn {
 	fmt.Print("\nTrying to connect to " + host + "....")
 

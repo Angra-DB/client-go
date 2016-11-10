@@ -1,7 +1,8 @@
-package client
+package main
 
 import (
 	"bufio"
+	"client/tcp"
 	"fmt"
 	"log"
 	"net"
@@ -9,9 +10,9 @@ import (
 )
 
 func main() {
-	connIp := os.Args[1]
+	connIP := os.Args[1]
 	port := os.Args[2]
-	conn := tcp.ConnectServer(connIp, port)
+	conn := tcp.ConnectServer(connIP, port)
 
 	communicateWithServer(conn)
 }
@@ -28,7 +29,7 @@ func communicateWithServer(conn net.Conn) {
 		userMessage = userMessage[:len(userMessage)-1]
 
 		if userMessage == "quit" {
-			tcp.Disconnect(conn)
+			tcp.DisconnectServer(conn)
 		}
 
 		if tcp.ProcessCommand(userMessage) {

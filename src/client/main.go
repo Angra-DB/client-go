@@ -10,6 +10,9 @@ import (
 )
 
 func main() {
+	if(len(os.Args) != 3){
+		log.Fatal("\nAn error occured: You must give IP and the Port as first and second arguments, respectively.")
+	}
 	connIP := os.Args[1]
 	port := os.Args[2]
 	conn := tcp.ConnectServer(connIP, port)
